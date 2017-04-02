@@ -13,33 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CharacterController extends Controller
 {
-	/**
-     * @Route("/character/updatescore", name="update_score")
-     */
-	public function updateScoreAction(Request $request)
-    {
-        if($request->isXmlHttpRequest()) {
-        	$response  = new Response();
-        	$session = new Session();
-        	if(!$session->get('user_id')) {
-        		 return $response->setContent(json_encode(array(
-                 'error' => 1,
-                 'message' => "Invalid request"
-                  )));
-        	}
-    	    $em = $this->getDoctrine()->getManager();
-    		$character = $em->getRepository('AppBundle:Characters')->findOneBy(array('userId'=> $session->get('user_id')));
-    		$character->setScore($request->request->get('score'));
-    		$em->flush();
-            return $response->setContent(json_encode(array(
-            	'success' => 1,
-            	 'message' => "Score updated succesfully"
-             )));
-        } else {
-            return $this->redirect($this->generateUrl('/'));
-        }
-    }
-
     /**
      * @Route("/character/updatedata", name="update_data")
      */

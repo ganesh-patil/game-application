@@ -45,46 +45,43 @@ jQuery(document).ready(function(){
     jQuery("#level").hide();
 
     jQuery("#play").click(function(e){
-      if (e.originalEvent.detail == 0)  {
+      if (e.originalEvent.detail == 0 || isGameStarted )  {
             e.preventDefault();
-          }
-      if(!isGameStarted) {
-          scrollLock = true;
-          isGameStarted = true;
-          var player = Crafty.e("Player");
-          player.x = 100;
-          player.y = 340; 
-          var bot = Crafty.e("Bot");
-          bot.x = 400;
-          bot.y = 300; 
-          bot.place(10,2,10,level);
-          jQuery("#pause").show();
-          jQuery("#level").hide();
       }
-      
-
+      else {
+            scrollLock = true;
+            isGameStarted = true;
+            var player = Crafty.e("Player");
+            player.x = 100;
+            player.y = 340; 
+            var bot = Crafty.e("Bot");
+            bot.x = 400;
+            bot.y = 300; 
+            bot.place(10,2,10,level);
+            jQuery("#pause").show();
+            jQuery("#level").hide();
+      }
      });
 
       jQuery("#level").click(function(e){
-        if (e.originalEvent.detail == 0)  {
+        if (e.originalEvent.detail == 0 || !levelEnabled)  {
             e.preventDefault();
-          }
-        
-        if(levelEnabled) {
-          level++;
-          jQuery("#levelTxt").text(level);
-             
-          scrollLock = true;
-          levelEnabled = false;
-          var player = Crafty.e("Player");
-          player.x = 100;
-          player.y = 340; 
-          var bot = Crafty.e("Bot");
-          bot.x = 400;
-          bot.y = 300; 
-          bot.place(10,2,10,level);
-          jQuery("#level").hide();
-      }
+        }
+        else {
+            level++;
+            jQuery("#levelTxt").text(level);
+               
+            scrollLock = true;
+            levelEnabled = false;
+            var player = Crafty.e("Player");
+            player.x = 100;
+            player.y = 340; 
+            var bot = Crafty.e("Bot");
+            bot.x = 400;
+            bot.y = 300; 
+            bot.place(10,2,10,level);
+            jQuery("#level").hide();
+        }
       });
       jQuery("#pause").click(function(e){
           if (e.originalEvent.detail == 0)  {
@@ -106,18 +103,15 @@ jQuery(document).ready(function(){
         
       });
 
-var $window = $(window), previousScrollTop = 0, scrollLock = false;
-$window.scroll(function(event) {     
-    if(scrollLock) {
-        $window.scrollTop(previousScrollTop); 
-    }
+      var $window = $(window), previousScrollTop = 0, scrollLock = false;
+      $window.scroll(function(event) {     
+          if(scrollLock) {
+              $window.scrollTop(previousScrollTop); 
+          }
 
-    previousScrollTop = $window.scrollTop();
+          previousScrollTop = $window.scrollTop();
 
-});
-
-
-
+      });
 });
 
 function updateData(params){

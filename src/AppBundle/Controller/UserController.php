@@ -55,12 +55,15 @@ class UserController extends Controller
             $character->setUser($user);
             $character->setIsBot(false);
             $character->setScore(0);
+            $character->setLevel(1);
             $em->persist($character);
             $em->flush($character);
-
-            return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+            $this->addFlash(
+                    'notice',
+                    'Character created successfully'
+            );
+            return $this->redirectToRoute('homepage');
         }
-
         return $this->render('user/new.html.twig', array(
             'user' => $user,
             'form' => $form->createView(),
