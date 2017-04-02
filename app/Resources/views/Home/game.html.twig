@@ -1,0 +1,61 @@
+{% extends 'layout.html.twig' %}
+
+{% block javascripts %}
+
+  <script src="{{ asset('/js/crafty.js') }}"></script>
+  <!-- <script src="{{ asset('/js/crafty_updated.js') }}"></script> -->
+    <script>var game_path = location.href.lastIndexOf("/") !== -1 ? location.href.substring(0, location.href.lastIndexOf("/") + 1) : location.href;</script>
+        
+    <script src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('/js/sprites.js') }}"></script>
+    <script src="{{ asset('/js/weapons.js') }}"></script>
+    <script src="{{ asset('/js/player.js') }}"></script>
+    <script src="{{ asset('/js/effects.js') }}"></script>
+    <script src="{{ asset('/js/bot.js') }}"></script>
+    <script src="{{ asset('/js/app.js') }}"></script>
+    
+  
+
+{% endblock %}
+
+{% block body %}
+
+<div class="col-md-9">
+<div class="jumbotron ">
+
+
+<div class="panel panel-info"> <div class="panel-heading"> <h3 class="panel-title">Player :{{ character.getName()}} </h3>  </div> </div>
+<p class="navbar-text">Level: <span id= "levelTxt">{{character.getLevel()}}</span></p>
+<p class="navbar-text">Score: <span id="scoreTxt">{{character.getScore()}}</span></p>
+
+
+
+ <div id="cr-stage" style=""></div>
+
+ <div class="" >
+ <p>Use Arrow Keys to move, Space to shoot</p>
+   <button id = "play" type="button" class="btn btn-success">Start game</button>
+   <button id = "level" type="button" class="btn btn-success ">Next level</button>
+   <button id = "pause" type="button" class="btn btn-success " >Pause</button>
+
+ </div>
+ </div>
+ </div>
+ <div class="col-md-3 jumbotron">
+ <div class="panel-heading">Top scores</div>
+ <table class="table"> 
+ <thead> 
+ <tr> <th>Name</th> <th>Score</th>
+</thead> 
+<tbody>
+{% for topScorer in topScorers %}
+<tr> <td scope="row">{{ topScorer.getName()}}</td> <td>{{ topScorer.getScore()}}</td> </tr>
+{% endfor %}
+</tbody> </table>
+ </div>
+   
+
+ 
+   
+
+{% endblock %}

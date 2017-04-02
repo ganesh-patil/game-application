@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block body %}
+    <h1>Enter your email address </h1>
+
+    {{ form_start(form) }}
+       {#  {{ form_widget(form) }} #}
+        <div class="form-group col-md-12">
+
+            {{ form_label(form.email, 'Email', {'label_attr': {'class': 'col-md-2'}}) }}
+            
+            {{ form_widget(form.email, {'attr': {'class': 'col-md-4'}})}}
+            <div class="error">
+            {{ form_errors(form.email) }}
+            </div>
+        </div>
+        
+        <div>
+            
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+        
+        
+    {{ form_end(form) }}
+    
+{% endblock %}
