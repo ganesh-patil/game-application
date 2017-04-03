@@ -17,7 +17,6 @@ class HomeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        
         return $this->render('Home/index.html.twig');
     }
 
@@ -28,13 +27,9 @@ class HomeController extends Controller
     {
         $session = new Session();
         if(!$session->get('user_id')) {
-             $this->addFlash(
-                    'error',
-                    'Please enter your email address'
-             );
+            $this->addFlash('error', 'Please enter your email address');
             return $this->redirectToRoute('user_get');
         }
-
         $em = $this->getDoctrine()->getManager();
         $character = $em->getRepository('AppBundle:Characters')->findOneBy(array('userId'=>$session->get('user_id')));
         $topScorers = $em->getRepository('AppBundle:Characters')->findBy(array(),array('score'=> 'DESC'),$this->container->getParameter('top_score_limit'));
@@ -42,6 +37,20 @@ class HomeController extends Controller
             'character' => $character,
             'topScorers'  => $topScorers
         ));
-        
+    }
+     /**
+     * @Route("/game/stop", name="stop_game")
+     */
+    public function stopAction(Request $request)
+    {
+        $session = new Session();
+        if(!$session->get('user_id')) {
+            $this->addFlash('error', 'Please enter your email address');
+            return $this->redirectToRoute('homepage');
+        }
+        $session->remove('user_id');
+        $session->remove('user_email');
+        return $this->redirectToRoute('homepage');
+
     }
 }

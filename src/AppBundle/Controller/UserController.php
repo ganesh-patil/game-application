@@ -17,23 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class UserController extends Controller
 {
-    /**
-     * Lists all user entities.
-     *
-     * @Route("/", name="user_index")
-     * @Method("GET")
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $users = $em->getRepository('AppBundle:User')->findAll();
-
-        return $this->render('user/index.html.twig', array(
-            'users' => $users,
-        ));
-    }
-
+    
     /**
      * Creates a new user entity.
      *
@@ -42,13 +26,16 @@ class UserController extends Controller
      */
     public function newAction(Request $request)
     {
+        $session = new Session();
+        if($session->get('user_id')) {
+            return $this->redirectToRoute('game');
+        }
         $user = new User();
         $form = $this->createForm('AppBundle\Form\UserType', $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if($this->saveUserAndCharacter($user)) {
-                 // return $this->redirectToRoute('homepage');
                 $this->setUserSessionData($user);
                 return $this->redirectToRoute('game');
             }
@@ -61,22 +48,23 @@ class UserController extends Controller
 
     /**
      * Get user and characters by email.
-     *
      * @Route("/get", name="user_get")
      * @Method({"GET", "POST"})
      */
     public function getAction(Request $request )
     {
+        $session = new Session();
+        if($session->get('user_id')) {
+            return $this->redirectToRoute('game');
+        }
         $user = new User();
         $form = $this->createForm('AppBundle\Form\GetUserType', $user);
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
             $userData = $em->getRepository('AppBundle:User')->findOneBy(array('email'=>$user->getEmail()));
-            if(!empty($userData)) {
-                $session = new Session();
-                $session->set('user_id', $userData->getId());
-                $session->set('user_email', $userData->getEmail());
+            if(!empty($userData)) { 
+                $this->setUserSessionData($userData);
                 return $this->redirectToRoute('game');
             }
             $this->addFlash('error', 'Invalid email address');
@@ -87,12 +75,14 @@ class UserController extends Controller
     }
 
 
+    /**
+    * set users data in session
+    */
     private function setUserSessionData($userData) {
         if(!empty($userData)) {
                 $session = new Session();
                 $session->set('user_id', $userData->getId());
                 $session->set('user_email', $userData->getEmail());
-                // return $this->redirectToRoute('game');
         }
     }
 
