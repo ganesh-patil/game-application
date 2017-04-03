@@ -47,22 +47,11 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush($user);
-            $character = new Characters();
-            $character->setName($user->getCharacterName());
-            $character->setUser($user);
-            $character->setIsBot(false);
-            $character->setScore(0);
-            $character->setLevel(1);
-            $em->persist($character);
-            $em->flush($character);
-            $this->addFlash(
-                    'notice',
-                    'Character created successfully'
-            );
-            return $this->redirectToRoute('homepage');
+            if($this->saveUserAndCharacter($user)) {
+                 // return $this->redirectToRoute('homepage');
+                $this->setUserSessionData($user);
+                return $this->redirectToRoute('game');
+            }
         }
         return $this->render('user/new.html.twig', array(
             'user' => $user,
@@ -71,7 +60,7 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new user entity.
+     * Get user and characters by email.
      *
      * @Route("/get", name="user_get")
      * @Method({"GET", "POST"})
@@ -81,82 +70,59 @@ class UserController extends Controller
         $user = new User();
         $form = $this->createForm('AppBundle\Form\GetUserType', $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted()) {
-             $em = $this->getDoctrine()->getManager();
-             $userData = $em->getRepository('AppBundle:User')->findOneBy(array('email'=>$user->getEmail()));
-             if(!empty($userData)) {
+            $em = $this->getDoctrine()->getManager();
+            $userData = $em->getRepository('AppBundle:User')->findOneBy(array('email'=>$user->getEmail()));
+            if(!empty($userData)) {
                 $session = new Session();
-                // $session->start();
                 $session->set('user_id', $userData->getId());
                 $session->set('user_email', $userData->getEmail());
                 return $this->redirectToRoute('game');
-
-             }
-             $this->addFlash(
-                    'error',
-                    'Invalid email address'
-                );
+            }
+            $this->addFlash('error', 'Invalid email address');
         }
-
         return $this->render('user/get.html.twig', array(
             'form' => $form->createView(),
         ));
     }
 
-    /**
-     * Finds and displays a user entity.
-     *
-     * @Route("/{id}", name="user_show")
-     * @Method("GET")
-     */
-    public function showAction(User $user)
-    {
 
-        dump($user);die;
-        $deleteForm = $this->createDeleteForm($user);
-
-        return $this->render('user/show.html.twig', array(
-            'user' => $user,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    
-
-    /**
-     * Deletes a user entity.
-     *
-     * @Route("/{id}", name="user_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, User $user)
-    {
-        $form = $this->createDeleteForm($user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($user);
-            $em->flush($user);
+    private function setUserSessionData($userData) {
+        if(!empty($userData)) {
+                $session = new Session();
+                $session->set('user_id', $userData->getId());
+                $session->set('user_email', $userData->getEmail());
+                // return $this->redirectToRoute('game');
         }
-
-        return $this->redirectToRoute('user_index');
     }
 
     /**
-     * Creates a form to delete a user entity.
-     *
-     * @param User $user The user entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(User $user)
+    *create new user with character 
+    */
+    private function saveUserAndCharacter(&$user)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_delete', array('id' => $user->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        $em = $this->getDoctrine()->getManager();
+        $em1 = $this->getDoctrine()->getManager();
+        $characterData = $em1->getRepository('AppBundle:Characters')->findOneBy(array('name'=>$user->getCharacterName()));
+        if(!empty($characterData)){
+            $this->addFlash('error','Character with provided name already exists');
+            return false;
+        }
+        $em->getConnection()->beginTransaction();
+        $em1->getConnection()->beginTransaction();
+        $em->persist($user);
+        $em->flush($user);
+        $character = new Characters();
+        $character->setName($user->getCharacterName());
+        $character->setUser($user);
+        $character->setIsBot(false);
+        $character->setScore(0);
+        $character->setLevel(1);
+        $em1->persist($character);
+        $em1->flush($character);
+        $em->getConnection()->commit();
+        $em1->getConnection()->commit();
+        $this->addFlash('notice','Character created successfully');
+        return true;
     }
 }

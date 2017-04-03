@@ -37,7 +37,7 @@ class HomeController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $character = $em->getRepository('AppBundle:Characters')->findOneBy(array('userId'=>$session->get('user_id')));
-        $topScorers = $em->getRepository('AppBundle:Characters')->findBy(array(),array('created'=> 'DESC'),$this->container->getParameter('top_score_limit'));
+        $topScorers = $em->getRepository('AppBundle:Characters')->findBy(array(),array('score'=> 'DESC'),$this->container->getParameter('top_score_limit'));
         return $this->render('Home/game.html.twig',  array(
             'character' => $character,
             'topScorers'  => $topScorers
