@@ -4,13 +4,19 @@ jQuery(document).ready(function(){
     Crafty.init(600,400, document.getElementById('cr-stage'));
    
    // set background url
-    Crafty.background("url(" + game_path + "img/bg.png)");
+    // Crafty.background("url(" + game_path + "img/bg.png)");
 
      //Bind UpdateStats Event
     Crafty.bind("UpdateStats",function(score){
-       console.log(score);
        currentScore = parseInt(jQuery("#scoreTxt").text());
        jQuery("#scoreTxt").text(currentScore+score);
+
+    });
+
+    //Bind UpdateStats Event
+    Crafty.bind("ReduceScore",function(score){
+       currentScore = parseInt(jQuery("#scoreTxt").text());
+       jQuery("#scoreTxt").text(currentScore-score);
 
     });
 

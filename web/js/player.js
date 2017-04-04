@@ -38,12 +38,6 @@ Crafty.c("Player",{
         var stage = $('#cr-stage');
         var keyDown = false; //Player didnt pressed a key
         this.requires("2D,Canvas,"+this.ship+",Multiway,Keyboard,Collision,Flicker") /*Add needed Components*/
-        // .multiway(this.movementSpeed, { /*Enable Movement Control*/
-        //     UP_ARROW: -90, 
-        //     DOWN_ARROW: 90, 
-        //     RIGHT_ARROW: 0, 
-        //     LEFT_ARROW: 180
-        // })
         .bind('Moved', function(from) { /*Bind a function which is triggered if player is moved*/
             /*Dont allow to move the player out of Screen*/
             if(this.x+this.w > Crafty.viewport.width ||
@@ -104,8 +98,6 @@ Crafty.c("Player",{
                         this.heat.current = ~~(this.heat.current*29/30); 
                 }
 
-                // Crafty.trigger("UpdateStats");
-                
                 if(this.weapon.overheated && this.heat.percent < 85){
                     this.weapon.overheated = false;
                     Crafty.trigger("HideText");
@@ -115,12 +107,6 @@ Crafty.c("Player",{
             if(this.preparing){
                 this.preparing = false;
                     this.flicker=false;
-                // this.y--;
-                // if(this.y < Crafty.viewport.height-this.h-Crafty.viewport.height/4){
-                //     this.preparing = false;
-                //     this.flicker=false;
-                  
-                // }
             }
         }
        
@@ -131,35 +117,13 @@ Crafty.c("Player",{
             this.score += points;
             // Crafty.trigger("UpdateStats");
         })
-        // .bind("Hurt",function(dmg){
-        //     if(this.flicker) return;
-        //     if(this.bounce == false) {
-        //         this.bounce = true;
-        //         var t = this;
-        //         stage.effect('highlight',{
-        //             color:'#990000'
-        //         },100,function(){
-        //             t.bounce = false;
-        //         });
-        //     }
-        //     // Crafty.e("Damage").attr({
-        //     //     x:this.x,
-        //     //     y:this.y
-        //     // });
-        //     if(this.shield.current <= 0){
-        //         this.shield.current = 0;
-        //         this.hp.current -= dmg;
-        //     }else{
-        //         this.shield.current -= dmg;
-        //     } 
-        //     Crafty.trigger("UpdateStats");
-        //     if(this.hp.current <= 0) this.die();
-        // })
+        .bind("Hurt",function(dmg){
+           
+            
+        })
         .onHit("EnemyBullet",function(ent){
             var bullet = ent[0].obj;
-            // this.trigger("Hurt",bullet.dmg);
             this.die();
-
             bullet.destroy();
         })
         .bind("PauseReset", function(){
@@ -208,7 +172,6 @@ Crafty.c("Player",{
             max:100,
             percent:0
         }
-        // Crafty.trigger("UpdateStats");
         //Init position
         this.x = Crafty.viewport.width/2-this.w/2;
         this.y = Crafty.viewport.height-this.h-36;
@@ -228,7 +191,6 @@ Crafty.c("Player",{
                 yspeed: 10 * Math.sin(this._rotation / (180 / Math.PI)),
                 xspeed: 10 * Math.cos(this._rotation / (180 / Math.PI))
             }); 
-            // console.log(bullet.x);
      
         if(this.heat.current < this.heat.max)
             this.heat.current ++;
@@ -244,21 +206,11 @@ Crafty.c("Player",{
             x:this.x,
             y:this.y
         });
+        Crafty.trigger("ReduceScore", 10);
         Crafty.trigger("UpdateScore");
         this.destroy();
         Crafty.trigger("playerKilled");
         Crafty.trigger("enableStart");
-        
-        // this.lives--;
-        // Crafty.trigger("UpdateStats");
-        // if(this.lives <= 0){
-        //     this.destroy();
-        //     Crafty.trigger("GameOver",this.score);
-        // }else{
-        //     this.reset();
-        // }
-        
-        
     },
     destroyPlayer:function(){
         this.destroy();

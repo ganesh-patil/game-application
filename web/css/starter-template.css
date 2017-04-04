@@ -5,3 +5,22 @@ body {
   padding: 40px 15px;
   /*text-align: center;*/
 }
+#home-pic {
+	background: url("/img/game_bg.png");
+	width: 600px;
+    height: 400px;
+    margin: auto;
+}
+.home-content {
+	text-align: center;
+}
+.start-options{
+	margin-top: 15px;
+}
+
+#cr-stage{
+	background: url("/img/bg.png");
+	width: 600px;
+    height: 400px;
+    margin: auto;
+}
