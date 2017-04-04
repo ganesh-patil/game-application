@@ -19,7 +19,6 @@ Crafty.c("RandomExplosion",{
 Crafty.c("Damage",{
 
     init:function(){
-      console.log("Damage called");
         this.addComponent("2D","Canvas","dmg")
         .delay(function(){this.destroy()},100);
         
@@ -28,7 +27,6 @@ Crafty.c("Damage",{
 Crafty.c("Flicker",{
     flicker:true,
    init:function(){
-    console.log("Damage called");
        this.flicker = true;
       
        this.bind("EnterFrame",function(frame){

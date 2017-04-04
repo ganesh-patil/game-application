@@ -5,14 +5,6 @@ Crafty.c("Bullet",{
     pause:false,
     init:function(){
         this.addComponent("2D","Canvas","Collision")
-        // .bind("EnterFrame",function(){
-        //     if(this.x > Crafty.viewport.width+this.w ||
-        //         this.x < -this.w || 
-        //         this.y < -this.h || 
-        //         this.y > Crafty.viewport.height+this.h){
-        //         this.destroy();
-        //     }
-        // })
         .onHit("Bullet",function(ent){
             this.destroy();
             ent[0].obj.destroy();
@@ -28,7 +20,6 @@ Crafty.c("Bullet",{
         });
     },
     updateStats:function(score){
-        console.log("Bullet  hit called");
       Crafty.trigger("UpdateStats", score);
     }
 });
@@ -47,7 +38,6 @@ Crafty.c("Weapon1",{
         .attr({
             dmg:1
         });
-        // Crafty.audio.play("laser1",1,0.8);
     } 
 });
 Crafty.c("BulletBot",{
@@ -63,6 +53,5 @@ Crafty.c("BulletBot",{
         }).attr({
             dmg:2
         });
-        // Crafty.audio.play("laser2",1,0.8);
     } 
 });

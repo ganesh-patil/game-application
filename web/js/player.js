@@ -1,20 +1,4 @@
 Crafty.c("Player",{
-    hp:{
-        current:10,
-        max:10,
-        percent:100
-    },
-    shield:{
-        current:10,
-        max:10,
-        percent:100
-    },
-    heat:{
-        current:0,
-        max:100,
-        percent:0
-    },
-    movementSpeed:30,
     lives:3,
     score:0,
     weapon:{
@@ -24,8 +8,6 @@ Crafty.c("Player",{
     },
     powerups:{},
     ship:"ship1",
-    bars:{},
-    infos:{},
     preparing:true,
     bounce:false,
     maxX : 200,
@@ -51,7 +33,6 @@ Crafty.c("Player",{
             }
           
         })
-
         .bind("KeyDown", function(e) {
             if(!this.pause) {
                 if(e.keyCode === Crafty.keys.SPACE){
@@ -93,32 +74,13 @@ Crafty.c("Player",{
                
                 if(keyDown && !this.weapon.overheated){
                     this.shoot();
-                }else{
-                    if(this.heat.current > 0) //Cooldown the weapon
-                        this.heat.current = ~~(this.heat.current*29/30); 
                 }
-
-                if(this.weapon.overheated && this.heat.percent < 85){
-                    this.weapon.overheated = false;
-                    Crafty.trigger("HideText");
-                }
-                    
             }
             if(this.preparing){
                 this.preparing = false;
                     this.flicker=false;
             }
         }
-       
-         
-            
-        })
-        .bind("Killed",function(points){
-            this.score += points;
-            // Crafty.trigger("UpdateStats");
-        })
-        .bind("Hurt",function(dmg){
-           
             
         })
         .onHit("EnemyBullet",function(ent){
@@ -127,7 +89,6 @@ Crafty.c("Player",{
             bullet.destroy();
         })
         .bind("PauseReset", function(){
-            console.log("pause called");
             if(this.pause) {
                this.pause = false;
             }
@@ -135,53 +96,14 @@ Crafty.c("Player",{
                 this.pause = true;
             }
         })
-        .bind("RestoreHP",function(val){
-            if(this.hp.current < this.hp.max){
-                this.hp.current += val;
-                // Crafty.trigger("UpdateStats");
-            }
-        
-        })
-        .bind("RestoreShield",function(val){
-            if(this.shield.current < this.shield.max){
-                this.shield.current += val;
-                // Crafty.trigger("UpdateStats");
-            }  
-        
-        })
         .bind("botKilled",function(){
            this.destroy();
         
         })
-        .reset() /*Set initial points*/;
         return this;
-    },
-    reset:function(){
-        this.hp = {
-            current:10,
-            max:10,
-            percent:100
-        };
-        this.shield = {
-            current:10,
-            max:10,
-            percent:100
-        };
-        this.heat = {
-            current:0,
-            max:100,
-            percent:0
-        }
-        //Init position
-        this.x = Crafty.viewport.width/2-this.w/2;
-        this.y = Crafty.viewport.height-this.h-36;
-        
-        this.flicker = true;
-        this.preparing = true;
     },
     shoot:function(){ 
         if(this.preparing) return;
-        
             var bullet = Crafty.e(this.weapon.name,"PlayerBullet");
             bullet.attr({
                 playerID:this[0],
@@ -191,14 +113,6 @@ Crafty.c("Player",{
                 yspeed: 10 * Math.sin(this._rotation / (180 / Math.PI)),
                 xspeed: 10 * Math.cos(this._rotation / (180 / Math.PI))
             }); 
-     
-        if(this.heat.current < this.heat.max)
-            this.heat.current ++;
-         
-        if(this.heat.current >= this.heat.max){
-            Crafty.trigger("ShowText","Weapon Overheated!");
-            this.weapon.overheated = true;
-        }
            
     },
     die:function(){
