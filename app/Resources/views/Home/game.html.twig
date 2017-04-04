@@ -1,20 +1,15 @@
 {% extends 'layout.html.twig' %}
 
 {% block javascripts %}
-
+<script>var game_path = location.href.lastIndexOf("/") !== -1 ? location.href.substring(0, location.href.lastIndexOf("/") + 1) : location.href;</script>
   <script src="{{ asset('/js/crafty.js') }}"></script>
-  <!-- <script src="{{ asset('/js/crafty_updated.js') }}"></script> -->
-    <script>var game_path = location.href.lastIndexOf("/") !== -1 ? location.href.substring(0, location.href.lastIndexOf("/") + 1) : location.href;</script>
-        
-    <script src="{{ asset('/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('/js/sprites.js') }}"></script>
-    <script src="{{ asset('/js/weapons.js') }}"></script>
-    <script src="{{ asset('/js/player.js') }}"></script>
-    <script src="{{ asset('/js/effects.js') }}"></script>
-    <script src="{{ asset('/js/bot.js') }}"></script>
-    <script src="{{ asset('/js/app.js') }}"></script>
-    
-  
+  <script src="{{ asset('/js/jquery-ui.min.js') }}"></script>
+  <script src="{{ asset('/js/sprites.js') }}"></script>
+  <script src="{{ asset('/js/weapons.js') }}"></script>
+  <script src="{{ asset('/js/player.js') }}"></script>
+  <script src="{{ asset('/js/effects.js') }}"></script>
+  <script src="{{ asset('/js/bot.js') }}"></script>
+  <script src="{{ asset('/js/app.js') }}"></script>
 
 {% endblock %}
 
@@ -34,15 +29,29 @@
 
  <div class="" >
  <p>Use Arrow Keys to move, Space to shoot</p>
-   <button id = "play" type="button" class="btn btn-success">Start game</button>
+ <ul class="list-inline">
+   <li>
+      <button id = "play" type="button" class="btn btn-success">Start game</button>
+   </li>
+   <li>
    <button id = "level" type="button" class="btn btn-success ">Next level</button>
+    </li>
+   <li>
    <button id = "pause" type="button" class="btn btn-success " >Pause</button>
+    </li>
+    <li class="pull-right">
+      <a href="{{ path('stop_game') }}"  class="btn btn-danger ">Stop</a>
+    </li>
+  
+   
+ </ul>
+
 
  </div>
  </div>
  </div>
  <div class="col-md-3 jumbotron">
- <div class="panel-heading">Top scores</div>
+ <div class="panel-heading"> <h3>Top scores</h3></div>
  <table class="table"> 
  <thead> 
  <tr> <th>Name</th> <th>Score</th>

@@ -29,6 +29,7 @@ class User
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
      * @Assert\Email()
+     * @Assert\NotBlank(message = "Please enter valid email address")
      */
     private $email;
 
@@ -39,6 +40,9 @@ class User
      */
     private $created;
 
+   /**
+    * @Assert\NotBlank(message = "Please enter character name")
+   */
     private $characterName;
 
 

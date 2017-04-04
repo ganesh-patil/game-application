@@ -10,15 +10,28 @@
 
 {% block body %}
 
- <div id="cr-stage" style="left:100px"></div>
+ 
 
- <div class="jumbotron">
-        <h1>Role playing game</h1>
-        <p>
-        <a href="{{ path('user_get') }}"  class="btn btn-lg btn-success">Start game</a>
-        </p>
-        <p>
-         <a href="{{ path('user_new') }}"  class="btn btn-lg btn-success">Create new character</a>
+ <div class="">
+ <div class="home-content">
+
+ <h3>Role playing game</h3>
+ <div id="home-pic" style=""></div>
+ <div class="start-options">
+  <ul class="list-inline">
+	   <li>
+	   <a href="{{ path('user_get') }}"  class="btn btn-lg btn-success">Start game</a>
+	   </li>
+	   <li>
+	   	<a href="{{ path('user_new') }}"  class="btn btn-lg btn-primary">Create new character</a>
+	   </li>
+   </ul>
+</div>
+  
+       
+ </div>
+ 
+        
        
         
       </div>

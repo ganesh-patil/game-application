@@ -17,7 +17,6 @@ class HomeController extends Controller
      */
     public function indexAction(Request $request)
     {
-        
         return $this->render('Home/index.html.twig');
     }
 
@@ -27,21 +26,31 @@ class HomeController extends Controller
     public function gameAction(Request $request)
     {
         $session = new Session();
-        if(!$session->get('user_id')) {
-             $this->addFlash(
-                    'error',
-                    'Please enter your email address'
-             );
+        if(!$session->get('user_id')) {  // if user try to come directly on game page 
+            $this->addFlash('error', 'Please enter your email address');
             return $this->redirectToRoute('user_get');
         }
-
         $em = $this->getDoctrine()->getManager();
-        $character = $em->getRepository('AppBundle:Characters')->findOneBy(array('userId'=>$session->get('user_id')));
-        $topScorers = $em->getRepository('AppBundle:Characters')->findBy(array(),array('created'=> 'DESC'),$this->container->getParameter('top_score_limit'));
+        $character = $em->getRepository('AppBundle:Characters')->findOneBy(array('userId'=>$session->get('user_id')));   // get current users character name 
+        $topScorers = $em->getRepository('AppBundle:Characters')->findBy(array(),array('score'=> 'DESC'),$this->container->getParameter('top_score_limit'));           // get top scorers 
         return $this->render('Home/game.html.twig',  array(
             'character' => $character,
             'topScorers'  => $topScorers
         ));
-        
+    }
+     /**
+     * @Route("/game/stop", name="stop_game")
+     */
+    public function stopAction(Request $request)
+    {
+        $session = new Session();
+        if(!$session->get('user_id')) {
+            $this->addFlash('error', 'Please enter your email address');
+            return $this->redirectToRoute('homepage');
+        }
+        $session->remove('user_id');            // destroy users session data.
+        $session->remove('user_email');
+        return $this->redirectToRoute('homepage');
+
     }
 }
